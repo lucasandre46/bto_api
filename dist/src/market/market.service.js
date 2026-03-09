@@ -25,21 +25,35 @@ let MarketService = class MarketService {
         const token = this.configService.get('BRAPI_TOKEN');
         const symbolArray = symbols.split(',').map(s => s.trim());
         try {
-            const requests = symbolArray.map(s => (0, rxjs_1.firstValueFrom)(this.httpService.get(`https://brapi.dev/api/quote/${s}?token=${token}`)));
+            const requests = symbolArray.map(s => (0, rxjs_1.firstValueFrom)(this.httpService.get(`https://brapi.dev/api/quote/${s}?range=1d&interval=1h&token=${token}`)));
             const responses = await Promise.all(requests);
             return responses.map(res => {
                 const asset = res.data.results[0];
                 return {
                     symbol: asset.symbol,
+                    longName: asset.longName || asset.shortName,
                     price: asset.regularMarketPrice,
                     change: asset.regularMarketChangePercent,
                     logo: asset.logourl,
+                    history: asset.historicalDataPrice?.map((point) => point.close) || []
                 };
             });
         }
         catch (error) {
             console.error('Erro na Brapi:', error.response?.data || error.message);
-            throw new Error('Falha ao buscar dados');
+            throw new common_1.HttpException('Falha ao buscar dados do mercado', common_1.HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    async getHistory(symbol) {
+        const token = this.configService.get('BRAPI_TOKEN');
+        const url = `https://brapi.dev/api/quote/${symbol}?range=5d&interval=1d&token=${token}`;
+        try {
+            const { data } = await (0, rxjs_1.firstValueFrom)(this.httpService.get(url));
+            const history = data.results[0].historicalDataPrice;
+            return history.map((point) => point.close);
+        }
+        catch (error) {
+            return [];
         }
     }
 };

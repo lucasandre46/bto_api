@@ -4,8 +4,10 @@ export declare class MarketController {
     constructor(marketService: MarketService);
     getCard(symbols: string): Promise<{
         symbol: any;
+        longName: any;
         price: any;
         change: any;
         logo: any;
+        history: any;
     }[]>;
 }
