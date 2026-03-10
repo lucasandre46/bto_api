@@ -26,7 +26,7 @@ let AuthService = class AuthService {
                 telefone: createUserDto.telefone,
             },
         });
-        return user;
+        return { token: user.id, user };
     }
     async login(loginUserDto) {
         const user = await this.prisma.user.findUnique({
@@ -40,7 +40,7 @@ let AuthService = class AuthService {
         if (user.senha !== loginUserDto.senha) {
             throw new Error('Senha incorreta');
         }
-        return user;
+        return { token: user.id, user };
     }
 };
 exports.AuthService = AuthService;

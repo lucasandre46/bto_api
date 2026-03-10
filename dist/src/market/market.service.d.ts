@@ -6,7 +6,6 @@ export declare class MarketService {
     constructor(httpService: HttpService, configService: ConfigService);
     getMarketData(symbols: string): Promise<{
         symbol: any;
-        longName: any;
         price: any;
         change: any;
         logo: any;

@@ -15,7 +15,7 @@ export class AuthService {
                 telefone: createUserDto.telefone,
             },
         });
-        return user;
+        return { token: user.id, user };
     }
 
     async login(loginUserDto: LoginUserDto) {
@@ -30,6 +30,6 @@ export class AuthService {
         if (user.senha !== loginUserDto.senha) {
             throw new Error('Senha incorreta');
         }
-        return user;
+        return { token: user.id, user };
     }
 }
