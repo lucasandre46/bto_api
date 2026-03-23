@@ -6,9 +6,8 @@ async function bootstrap() {
 
   app.enableCors({
     origin: [
-      'https://bto-coins.vercel.app',
-      'http://localhost:5173',
       'http://localhost:3000',
+      'http://localhost:5173',
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
