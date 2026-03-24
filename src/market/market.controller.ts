@@ -1,13 +1,15 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { MarketService } from './market.service';
+import { MarketQueryDto } from './dto/market-query.dto';
+import { SupabaseGuard } from '../common/guards/supabase.guard';
 
 @Controller('market')
+@UseGuards(SupabaseGuard) // PROTEÇÃO ATIVADA
 export class MarketController {
     constructor(private readonly marketService: MarketService) { }
 
-    @Get('card') // Mantive 'card' conforme seu log de erro mostrou
-    async getCard(@Query('symbols') symbols: string) {
-        // symbols aqui será "BTC" ou "BTC,ETH"
-        return this.marketService.getMarketData(symbols);
+    @Get('card')
+    async getCard(@Query() query: MarketQueryDto) {
+        return this.marketService.getMarketData(query.symbols);
     }
 }

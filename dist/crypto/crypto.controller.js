@@ -15,6 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CryptoController = void 0;
 const common_1 = require("@nestjs/common");
 const crypto_service_1 = require("./crypto.service");
+const crypto_query_dto_1 = require("./dto/crypto-query.dto");
+const supabase_guard_1 = require("../common/guards/supabase.guard");
 let CryptoController = class CryptoController {
     cryptoService;
     constructor(cryptoService) {
@@ -23,9 +25,8 @@ let CryptoController = class CryptoController {
     async getBitcoinPrice() {
         return this.cryptoService.getBitcoinPrice();
     }
-    async getTopCoins(perPage) {
-        const limit = perPage ? parseInt(perPage, 10) : 10;
-        return this.cryptoService.getTopCoins(limit);
+    async getTopCoins(query) {
+        return this.cryptoService.getTopCoins(query.perPage);
     }
 };
 exports.CryptoController = CryptoController;
@@ -37,13 +38,14 @@ __decorate([
 ], CryptoController.prototype, "getBitcoinPrice", null);
 __decorate([
     (0, common_1.Get)('top-coins'),
-    __param(0, (0, common_1.Query)('perPage')),
+    __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [crypto_query_dto_1.TopCoinsQueryDto]),
     __metadata("design:returntype", Promise)
 ], CryptoController.prototype, "getTopCoins", null);
 exports.CryptoController = CryptoController = __decorate([
     (0, common_1.Controller)('crypto'),
+    (0, common_1.UseGuards)(supabase_guard_1.SupabaseGuard),
     __metadata("design:paramtypes", [crypto_service_1.CryptoService])
 ], CryptoController);
 //# sourceMappingURL=crypto.controller.js.map

@@ -15,25 +15,28 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MarketController = void 0;
 const common_1 = require("@nestjs/common");
 const market_service_1 = require("./market.service");
+const market_query_dto_1 = require("./dto/market-query.dto");
+const supabase_guard_1 = require("../common/guards/supabase.guard");
 let MarketController = class MarketController {
     marketService;
     constructor(marketService) {
         this.marketService = marketService;
     }
-    async getCard(symbols) {
-        return this.marketService.getMarketData(symbols);
+    async getCard(query) {
+        return this.marketService.getMarketData(query.symbols);
     }
 };
 exports.MarketController = MarketController;
 __decorate([
     (0, common_1.Get)('card'),
-    __param(0, (0, common_1.Query)('symbols')),
+    __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [market_query_dto_1.MarketQueryDto]),
     __metadata("design:returntype", Promise)
 ], MarketController.prototype, "getCard", null);
 exports.MarketController = MarketController = __decorate([
     (0, common_1.Controller)('market'),
+    (0, common_1.UseGuards)(supabase_guard_1.SupabaseGuard),
     __metadata("design:paramtypes", [market_service_1.MarketService])
 ], MarketController);
 //# sourceMappingURL=market.controller.js.map
